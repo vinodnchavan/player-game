@@ -1,82 +1,108 @@
 
+"""
+    A class to represent a player in a game.
+
+    Attributes:
+        name (str): The player's name.
+        level (int): The current level of the player.
+        health (int): The player's current health.
+        max_health (int): The max health player can have at current level.
+        attack (int): Attack power of the player.
+        defense (int): Defensive strength of the player.
+        inventory (list): A list of items the player collects.
+    """
+
 class Player:
-    """
-    Player class for a game.
+  
 
-    Attributes:
-        name (str): Player's name.
-        level (int): Current level of the player.
-        health (int): Player's current health.
-        max_health (int): Player's maximum possible health.
-        inventory (list): Items collected by the player.
-        attack (int): Attack power.
-        defence (int): Defence power.
-    """
-
-    def __init__(self, name, level=1, max_health=100, attack=10, defence=5):
+    def __init__(self, name):
         self.name = name
-        self.level = level
-        self.max_health = max_health
-        self.health = max_health
-        self.inventory = []
-        self.attack = attack
-        self.defence = defence
+        self.level = 1
+        self.max_health = 100
+        self.health = self.max_health
+        self.attack = 10
+        self.defense = 5
+        self.inventory = []  # Holds items player picks up during gameplay
 
-    def take_damage(self, damage):
-        """Reduces player health. Health won't go below 0."""
-        self.health -= damage
-        if self.health < 0:
-            self.health = 0
+        """
+        Calculates effective damage after defense is applied.
+        Health can't drop below 0.
+        """
 
+    def take_damage(self, damage):  
+       
+        actual_damage = max(0, damage - self.defense)
+        self.health = max(0, self.health - actual_damage)
+        print(f"{self.name} took {actual_damage} damage. Health is now {self.health}/{self.max_health}")
+    """
+        Restores health up to max_health.
+        """
     def heal(self, amount):
-        """Heals the player. Health won’t go beyond max_health."""
-        self.health += amount
-        if self.health > self.max_health:
-            self.health = self.max_health
+        
+        if self.health == self.max_health:
+            print(f"{self.name} is already at full health.")
+        else:
+            self.health = min(self.max_health, self.health + amount)
+            print(f"{self.name} healed for {amount}. Health is now {self.health}/{self.max_health}")
 
-    def add_item(self, item):
-        """Adds an item to the player's inventory."""
+    """
+        Adds a collected item to inventory.
+        """
+    def pick_item(self, item):
+        
         self.inventory.append(item)
-
-    def __str__(self):
-        return f"{self.name} (Lvl {self.level}) - HP: {self.health}/{self.max_health}, Inv: {self.inventory}"
-
-
-class GameLevel:
+        print(f"{self.name} picked up {item}")
     """
-    Represents a game level or area.
-
-    Attributes:
-        name (str): Name of the level.
-        items (list): Items available in this level.
+        Increases player's stats and restores health.
+        Called when player gains enough experience (not tracked here).
+        """
+    def level_up(self):
+        
+        self.level += 1
+        self.max_health += 10
+        self.health = self.max_health
+        self.attack += 3
+        self.defense += 2
+        print(f"{self.name} is now Level {self.level}!")
     """
+        Prints the player's current state.
+        """
+    def show_status(self):
+        
+        print("\n----- Player Info -----")
+        print(f"Name: {self.name}")
+        print(f"Level: {self.level}")
+        print(f"Health: {self.health}/{self.max_health}")
+        print(f"Attack: {self.attack}")
+        print(f"Defense: {self.defense}")
+        print(f"Items: {self.inventory if self.inventory else 'None'}")
+        print("-----------------------\n")
 
-    def __init__(self, name, items=None):
-        if items is None:
-            items = []
-        self.name = name
-        self.items = items
 
-    def give_items_to(self, player):
-        """Moves all level items into player's inventory."""
-        for item in self.items:
-            player.add_item(item)
-        self.items = []
-
-    def __str__(self):
-        return f"{self.name} Level - Items: {self.items}"
-
+# Simulating a gameplay scenario to show output
 
 if __name__ == "__main__":
-    player = Player("Leo")
-    print(player)
+    # Creating a player instance
+    player1 = Player("Vinod")
 
-    player.take_damage(25)
-    player.heal(10)
-    player.add_item("Axe")
-    print(player)
+    # Show initial status
+    player1.show_status()
 
-    forest = GameLevel("Forest", ["Potion", "Map"])
-    print(forest)
-    forest.give_items_to(player)
-    print(player)
+    # Pick up a weapon item
+    player1.pick_item("VFX Sword")
+
+    # Take some damage during gameplay
+    player1.take_damage(15)
+
+    # Heal some HP
+    player1.heal(10)
+
+    # Level up (e.g., after completing a quest)
+    player1.level_up()
+
+    # Pick another item
+    player1.pick_item("Health Boost")
+
+    # Final status after multiple actions
+    player1.show_status()
+
