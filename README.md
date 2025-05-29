@@ -30,7 +30,7 @@ This assignment helped me brush up on object-oriented programming and implement 
 ## 🛠️ Tech & Tools Used
 
 - Python 3.11+
-- Terminal for testing (`python DD_Player_game_Project.py`)
+- Terminal for testing (`python player_game.py`)
 - Git for version control
 - VS Code for development and linting
 
@@ -41,5 +41,5 @@ This assignment helped me brush up on object-oriented programming and implement 
 Clone the repo and run:
 
 ```bash
-python DD_Player_game_Project.py
+python player_game.py
 
